@@ -8,7 +8,7 @@ That separation improves interpretability when runs differ, because it narrows w
 
 This section defines the minimal architecture contract that keeps stage logic reusable and wrappers operationally lightweight:
 
-- reusable stage logic lives in `src/nextgen2026_coding_bootcamp/steps/`
+- reusable stage logic lives in `src/<PROJECT_PACKAGE>/steps/`
 - executable wrappers live in `scripts/`
 
 Even if `fetch` and `prepare` already exist, we still teach this boundary explicitly before deepening `analyze`.
@@ -40,7 +40,7 @@ repo/
 │   ├── 00_fetch.py
 │   ├── 01_prepare.py
 │   └── 02_analyze.py
-├── src/nextgen2026_coding_bootcamp/
+├── src/<PROJECT_PACKAGE>/
 │   └── steps/             # REUSABLE method logic (The "Engine")
 │       ├── fetch.py
 │       ├── prepare.py
@@ -55,7 +55,7 @@ repo/
 This step isolates analytical transformations so they can be reused by wrappers, tests, and orchestration without copy-paste drift. The reproducibility benefit is that one method implementation is audited in one place. If results differ across runs, this separation makes it easier to rule out wrapper-side causes first.
 
 
-Chapter snapshot (`src/nextgen2026_coding_bootcamp/steps/analyze.py`):
+Chapter snapshot (`src/<PROJECT_PACKAGE>/steps/analyze.py`):
 
 ```python
 from pathlib import Path
@@ -63,18 +63,19 @@ from pathlib import Path
 import pandas as pd
 
 
-def build_hourly_profile(input_csv: Path, output_csv: Path) -> dict:
+def run_analysis_logic(input_csv: Path, output_csv: Path) -> dict:
     df = pd.read_csv(input_csv)
-    profile = (
-        df.groupby(["hour", "day_type"], as_index=False)["total_rentals"]
+    # Generic analysis logic (e.g., aggregation)
+    result = (
+        df.groupby(["grouping_column"], as_index=False)["target_variable"]
         .mean()
-        .rename(columns={"total_rentals": "mean_rentals"})
+        .rename(columns={"target_variable": "aggregated_value"})
     )
     output_csv.parent.mkdir(parents=True, exist_ok=True)
-    profile.to_csv(output_csv, index=False)
+    result.to_csv(output_csv, index=False)
     return {
         "rows_in": int(len(df)),
-        "rows_out": int(len(profile)),
+        "rows_out": int(len(result)),
         "output_csv": str(output_csv),
     }
 ```
@@ -87,13 +88,13 @@ This step keeps the execution entry point explicit while preventing method dupli
 ```python
 from pathlib import Path
 
-from nextgen2026_coding_bootcamp.steps.analyze import build_hourly_profile
+from <PROJECT_PACKAGE>.steps.analyze import run_analysis_logic
 
 
 def main() -> int:
-    input_csv = Path("data/intermediate/hourly_bike_data.csv")
-    output_csv = Path("results/hourly_profile.csv")
-    build_hourly_profile(input_csv=input_csv, output_csv=output_csv)
+    input_csv = Path("data/intermediate/processed_data.csv")
+    output_csv = Path("results/analysis_output.csv")
+    run_analysis_logic(input_csv=input_csv, output_csv=output_csv)
     return 0
 
 

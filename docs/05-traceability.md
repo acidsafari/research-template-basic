@@ -25,7 +25,7 @@ Implement these steps from identity primitives to wrapper integration so traceab
 This step introduces a run identity object that anchors all later provenance files. It turns each execution into an addressable record rather than a transient process. Ensure run IDs are unique and directories are created atomically to avoid collisions.
 
 
-Update `src/nextgen2026_coding_bootcamp/runtime.py`:
+Update `src/<PROJECT_PACKAGE>/runtime.py`:
 
 ```python
 from dataclasses import dataclass, field
@@ -72,7 +72,7 @@ def create_run_context(output_root: Path, run_name: str | None = None) -> RunCon
 This step routes stage outputs into run-scoped paths so runs no longer overwrite one another. For comparative research, that preserves evidence needed for retrospective review. If output files still land in shared folders during traceable mode, treat that as a contract break.
 
 
-Chapter snapshot (`src/nextgen2026_coding_bootcamp/steps/analyze.py`):
+Chapter snapshot (`src/<PROJECT_PACKAGE>/steps/analyze.py`):
 
 ```python
 def run_analyze(cfg, ctx=None) -> dict:
@@ -91,7 +91,7 @@ def run_analyze(cfg, ctx=None) -> dict:
 This step creates a lightweight index that links run identity to produced artifacts. It improves navigation and automation without replacing underlying files. Keep manifest fields stable across runs so downstream comparison tooling stays simple.
 
 
-`src/nextgen2026_coding_bootcamp/manifests.py`
+`src/<PROJECT_PACKAGE>/manifests.py`
 
 ```python
 import json
@@ -121,11 +121,11 @@ from pathlib import Path
 
 from omegaconf import OmegaConf
 
-from nextgen2026_coding_bootcamp.cli import build_stage_parser
-from nextgen2026_coding_bootcamp.config import compose_config
-from nextgen2026_coding_bootcamp.manifests import write_manifest
-from nextgen2026_coding_bootcamp.runtime import create_run_context, configure_logging
-from nextgen2026_coding_bootcamp.steps.analyze import run_analyze
+from <PROJECT_PACKAGE>.cli import build_stage_parser
+from <PROJECT_PACKAGE>.config import compose_config
+from <PROJECT_PACKAGE>.manifests import write_manifest
+from <PROJECT_PACKAGE>.runtime import create_run_context, configure_logging
+from <PROJECT_PACKAGE>.steps.analyze import run_analyze
 
 
 def main() -> int:
@@ -157,7 +157,7 @@ Use this checkpoint to verify that repeated analyze runs create distinct run dir
 
 ```bash
 uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml --run-name baseline
-uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml --run-name q85 --set analysis.high_demand_quantile=0.85
+uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml --run-name variant_1 --set analysis.threshold=0.85
 ls -1 runs | tail -n 5
 ```
 

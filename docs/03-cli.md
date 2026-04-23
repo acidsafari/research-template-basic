@@ -25,7 +25,7 @@ Apply these steps from parser definition to wrapper adoption so interface consis
 This step defines one stable CLI contract so stage wrappers do not drift over time. For reproducibility, a uniform command surface makes run intent easier to audit across team members. Keep arguments minimal and explicit so each flag has a clear provenance meaning.
 
 
-`src/nextgen2026_coding_bootcamp/cli.py`
+`src/<PROJECT_PACKAGE>/cli.py`
 
 ```python
 import argparse
@@ -66,9 +66,9 @@ Chapter snapshot (`scripts/02_analyze.py`):
 ```python
 from pathlib import Path
 
-from nextgen2026_coding_bootcamp.cli import build_stage_parser
-from nextgen2026_coding_bootcamp.config import compose_config
-from nextgen2026_coding_bootcamp.steps.analyze import run_analyze
+from <PROJECT_PACKAGE>.cli import build_stage_parser
+from <PROJECT_PACKAGE>.config import compose_config
+from <PROJECT_PACKAGE>.steps.analyze import run_analyze
 
 
 def main() -> int:
@@ -109,7 +109,7 @@ Use this checkpoint to verify interface behavior, not just stage success: help o
 ```bash
 uv run python scripts/02_analyze.py --help
 uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml
-uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml --set analysis.high_demand_quantile=0.92
+uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml --set analysis.threshold=0.92
 ```
 
 ## 5. Transition

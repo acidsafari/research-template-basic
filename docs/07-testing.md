@@ -60,10 +60,10 @@ This step aligns statistical/numeric claims with appropriate assertion precision
 Representative assertions:
 
 ```python
-assert list(prepared.columns) == PREPARED_COLUMNS
-assert abs(prepared.loc[0, "temp_c"] - 3.28) < 1e-6
-assert summary["high_demand_threshold"] == 25.0
-assert prepared["hour"].between(0, 23).all()
+assert list(processed.columns) == PROCESSED_COLUMNS
+assert abs(processed.loc[0, "numeric_value"] - 3.28) < 1e-6
+assert summary["analysis_threshold"] == 25.0
+assert processed["category"].isin(VALID_CATEGORIES).all()
 ```
 
 Use exact checks for structure/categorical behavior and tolerance-aware checks for floating-point values.

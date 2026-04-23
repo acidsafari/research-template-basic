@@ -27,7 +27,7 @@ Follow these steps from stage instrumentation to centralized logger setup to wra
 This step instruments analyze with milestone log events so execution flow can be reconstructed after the fact. For research evidence, logs complement artifacts by showing when and where transformations occurred. Prefer structured, low-ambiguity messages that include key paths and counts.
 
 
-Chapter snapshot (`src/nextgen2026_coding_bootcamp/steps/analyze.py`):
+Chapter snapshot (`src/<PROJECT_PACKAGE>/steps/analyze.py`):
 
 ```python
 from __future__ import annotations
@@ -42,34 +42,35 @@ logger = logging.getLogger(__name__)
 
 
 def run_analyze(cfg) -> dict:
-    prepared_csv = Path(cfg.paths.intermediate_dir) / "hourly_bike_data.csv"
+    prepared_csv = Path(cfg.paths.intermediate_dir) / "processed_data.csv"
     output_dir = Path(cfg.paths.results_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info("analyze:start input=%s", prepared_csv)
     prepared = pd.read_csv(prepared_csv)
 
-    high_demand_quantile = float(cfg.analysis.high_demand_quantile)
-    threshold = float(prepared["total_rentals"].quantile(high_demand_quantile))
+    threshold_val = float(cfg.analysis.threshold)
+    # Generic analysis metric (e.g., a quantile of a target column)
+    target_threshold = float(prepared["target_variable"].quantile(threshold_val))
 
-    hourly_profile = (
-        prepared.groupby(["hour", "day_type"], as_index=False)["total_rentals"]
+    analysis_result = (
+        prepared.groupby(["grouping_key"], as_index=False)["target_variable"]
         .mean()
-        .rename(columns={"total_rentals": "mean_rentals"})
+        .rename(columns={"target_variable": "aggregated_metric"})
     )
 
-    profile_path = output_dir / "hourly_profile.csv"
-    summary_path = output_dir / "high_demand_summary.json"
+    output_path = output_dir / "analysis_output.csv"
+    summary_path = output_dir / "analysis_summary.json"
 
-    logger.info("analyze:write profile=%s", profile_path)
-    hourly_profile.to_csv(profile_path, index=False)
+    logger.info("analyze:write results=%s", output_path)
+    analysis_result.to_csv(output_path, index=False)
 
     logger.info("analyze:write summary=%s", summary_path)
     summary_path.write_text(
         json.dumps(
             {
-                "high_demand_quantile": high_demand_quantile,
-                "high_demand_threshold": threshold,
+                "analysis_threshold": threshold_val,
+                "calculated_metric": target_threshold,
                 "rows_in": int(len(prepared)),
             },
             indent=2,
@@ -77,10 +78,10 @@ def run_analyze(cfg) -> dict:
         + "\n"
     )
 
-    logger.info("analyze:finish rows_in=%d threshold=%s", len(prepared), threshold)
+    logger.info("analyze:finish rows_in=%d metric=%s", len(prepared), target_threshold)
     return {
-        "prepared_csv": str(prepared_csv),
-        "hourly_profile_csv": str(profile_path),
+        "input_csv": str(prepared_csv),
+        "output_csv": str(output_path),
         "summary_json": str(summary_path),
     }
 ```
@@ -90,7 +91,7 @@ def run_analyze(cfg) -> dict:
 This step ensures all modules emit logs with the same format and level behavior. Centralization avoids fragmented observability where different wrappers log differently. If logs are missing or duplicated, debug handler setup once in this helper rather than per script.
 
 
-`src/nextgen2026_coding_bootcamp/runtime.py`
+`src/<PROJECT_PACKAGE>/runtime.py`
 
 ```python
 from pathlib import Path
@@ -117,10 +118,10 @@ Chapter snapshot (`scripts/02_analyze.py`):
 ```python
 from pathlib import Path
 
-from nextgen2026_coding_bootcamp.cli import build_stage_parser
-from nextgen2026_coding_bootcamp.config import compose_config
-from nextgen2026_coding_bootcamp.runtime import configure_logging
-from nextgen2026_coding_bootcamp.steps.analyze import run_analyze
+from <PROJECT_PACKAGE>.cli import build_stage_parser
+from <PROJECT_PACKAGE>.config import compose_config
+from <PROJECT_PACKAGE>.runtime import configure_logging
+from <PROJECT_PACKAGE>.steps.analyze import run_analyze
 
 
 def main() -> int:

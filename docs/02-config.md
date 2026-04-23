@@ -48,7 +48,7 @@ paths:
 
 ```yaml
 analysis:
-  high_demand_quantile: 0.90
+  threshold: 0.90
 ```
 
 `configs/profiles/base.yaml`
@@ -63,7 +63,7 @@ profile:
 This step centralizes config behavior into one implementation used by scripts and orchestration. The methodological gain is that all runs interpret overrides the same way, reducing hidden execution differences. If behavior seems inconsistent, inspect composition order first before changing stage logic.
 
 
-`src/nextgen2026_coding_bootcamp/config.py`
+`src/<PROJECT_PACKAGE>/config.py`
 
 ```python
 from pathlib import Path
@@ -96,7 +96,7 @@ def compose_config(
 This step moves analytical choices from source literals to run inputs, which makes method changes auditable. Researchers can then compare runs by configuration rather than by reading code diffs. Validate that every threshold or path affecting interpretation is sourced from `cfg`.
 
 
-Chapter snapshot (`src/nextgen2026_coding_bootcamp/steps/analyze.py`):
+Chapter snapshot (`src/<PROJECT_PACKAGE>/steps/analyze.py`):
 
 ```python
 from __future__ import annotations

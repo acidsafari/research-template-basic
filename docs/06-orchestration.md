@@ -25,13 +25,13 @@ Proceed from function-level orchestration to CLI wrapper integration to preceden
 This step defines the canonical stage order in reusable function form. For methodological clarity, orchestration should call stage functions directly rather than shelling out to scripts. Keep this order explicit so changes are intentional and reviewable.
 
 
-`src/nextgen2026_coding_bootcamp/workflow.py`
+`src/<PROJECT_PACKAGE>/workflow.py`
 
 ```python
-from nextgen2026_coding_bootcamp.steps.fetch import run_fetch
-from nextgen2026_coding_bootcamp.steps.prepare import run_prepare
-from nextgen2026_coding_bootcamp.steps.analyze import run_analyze
-from nextgen2026_coding_bootcamp.steps.report import run_report
+from <PROJECT_PACKAGE>.steps.fetch import run_fetch
+from <PROJECT_PACKAGE>.steps.prepare import run_prepare
+from <PROJECT_PACKAGE>.steps.analyze import run_analyze
+from <PROJECT_PACKAGE>.steps.report import run_report
 
 
 def run_workflow(cfg, ctx):
@@ -55,10 +55,10 @@ from pathlib import Path
 
 from omegaconf import OmegaConf
 
-from nextgen2026_coding_bootcamp.config import compose_config
-from nextgen2026_coding_bootcamp.manifests import write_manifest
-from nextgen2026_coding_bootcamp.runtime import create_run_context, configure_logging
-from nextgen2026_coding_bootcamp.workflow import run_workflow
+from <PROJECT_PACKAGE>.config import compose_config
+from <PROJECT_PACKAGE>.manifests import write_manifest
+from <PROJECT_PACKAGE>.runtime import create_run_context, configure_logging
+from <PROJECT_PACKAGE>.workflow import run_workflow
 
 DEFAULT_PARTS = [
     "run.yaml",
