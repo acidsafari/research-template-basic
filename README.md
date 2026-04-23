@@ -60,4 +60,4 @@ This project is optimized for AI-assisted development. Please refer to **[AGENTS
 
 ## 🔗 Other Templates
 - **[Basic Research Template](./)** (Current)
-- **Advanced Research Template**: [Link pending completion]
+- **Advanced Research Template**: (https://github.com/acidsafari/research-template-advanced)
