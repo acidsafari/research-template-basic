@@ -1,45 +1,38 @@
 # Session Context Registry
 
-## Active Task: Temperature-Band Summary (`feat/temp-band-summary`)
+## Current Session: Template Enhancement & MLAI Workshop Reference
 
 ### 🗺️ Context Map
-This diagram shows the relationship between our task and the repository surfaces.
+This diagram shows the integration of MLAI workshop patterns into the Research Template.
 
 ```mermaid
 graph TD
-    subgraph Upstream [Read-Only / High Risk]
-        F[fetch.py] --> P[prepare.py]
+    subgraph MLAI_Workshop [External Reference]
+        WS[standalone-mlai-workshops] --> NB[Notebooks 01-04]
     end
 
-    subgraph Downstream [Active Context / Low Risk]
-        A[analyze.py] --> R[report.py]
-        TS[test_analyze_report.py]
+    subgraph Template_Basic [Local Target]
+        MD[Modular Logic: data, models, metrics] --> RT[runtime.py]
+        MD --> ON[basic_template_exploration.ipynb]
+        ON --> ML[MLflow Tracking]
     end
 
-    subgraph Config
-        AC[analyze.yaml]
-    end
-
-    P -.->|input_csv| A
-    A -->|temp_band_summary.csv| R
-    A -->|temp_band_summary.csv| TS
-    AC --> A
+    WS -.->|Patterns| MD
 ```
 
 ### 📋 Context Bundle Log
 
-| Task Slug | Spec Reference | Brief Reference | Context Bundle | Rationale |
-| --- | --- | --- | --- | --- |
-| `temp-band` | `01-task-spec.md` | `02-agent-brief.md` | `analyze.py`, `report.py`, `test_analyze_report.py`, `analyze.yaml` | Downstream implementation and verification only. |
+| Task Slug | Context Bundle | Rationale |
+| --- | --- | --- |
+| `template-enhancement` | `data.py`, `models.py`, `metrics.py`, `basic_template_exploration.ipynb` | Integrating scientific best practices from MLAI workshops. |
 
 ### 🛠️ Verification Trace
-- [x] Baseline Workflow Run (`baseline`)
-- [x] Task Spec Approved
-- [x] Agent Brief Approved
-- [x] Implementation Plan Reviewed
-- [x] Final Verification Passed
-- [x] Review & Decision Recorded
-- [x] Hardening Note Approved
+- [x] MLAI Workshops Cloned Standalone
+- [x] Modules 01-04 executed & summarized
+- [x] Reproducibility helper added (`_to_rng`)
+- [x] Modular logic files created
+- [x] Onboarding notebook created (Colab + MLflow)
+- [x] All changes committed
 
 ## 📊 Resource Management
 
