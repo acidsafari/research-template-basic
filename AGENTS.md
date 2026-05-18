@@ -14,11 +14,13 @@ This repository teaches reproducible, reviewable workflow development on the Bik
 
 ## Repository Map
 - `src/nextgen2026_coding_bootcamp/steps/`: stage logic (Entry points: `run_fetch`, `run_prepare`, `run_analyze`, `run_report`)
+- `src/nextgen2026_coding_bootcamp/data.py`, `models.py`, `metrics.py`: Modular research logic (MLAI workshop patterns).
 - `scripts/`: CLI wrappers and workflow runner
 - `configs/`: run/path/stage/profile configuration
 - `tests/`: regression and workflow checks
 - `runs/`: run-scoped artifacts and manifests
 - `docs/`: workshop guides, templates, and archive
+- `../standalone-mlai-workshops/`: External reference repository for ML foundations.
 
 ---
 
