@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 import logging
 import uuid
+import numpy as np
 
 
 def configure_logging(log_path: Path, level: str = "INFO") -> None:
@@ -14,6 +15,18 @@ def configure_logging(log_path: Path, level: str = "INFO") -> None:
         handlers=[logging.FileHandler(log_path), logging.StreamHandler()],
         force=True,
     )
+
+
+def _to_rng(
+    seed: int | None = None, rng: np.random.Generator | None = None
+) -> np.random.Generator:
+    """
+    Standardize random number generator creation.
+    If an existing RNG is provided, return it. Otherwise, create a new one from seed.
+    """
+    if rng is not None:
+        return rng
+    return np.random.default_rng(seed)
 
 
 def make_run_id(run_name: str | None = None) -> str:

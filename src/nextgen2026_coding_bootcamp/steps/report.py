@@ -1,13 +1,21 @@
 from pathlib import Path
+import os
+import tempfile
 
 import matplotlib.pyplot as plt
 import pandas as pd
+
+# Standardize matplotlib config directory for restricted environments (e.g. Colab/HPC)
+os.environ.setdefault(
+    "MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "nextgen-matplotlib")
+)
 
 
 def create_demand_plots(
     hourly_profile_csv: Path,
     high_demand_share_csv: Path,
     output_dir: Path,
+    close_figs: bool = True,
 ) -> dict:
     """Generate and save plots based on analysis results."""
     # Load analysis results
@@ -30,7 +38,6 @@ def create_demand_plots(
 
     plot1_path = output_dir / "hourly_demand_by_day_type.png"
     fig1.savefig(plot1_path, dpi=150)
-    plt.close(fig1)
 
     # Plot 2: High-demand share by hour
     fig2, ax2 = plt.subplots(figsize=(10, 5))
@@ -43,12 +50,23 @@ def create_demand_plots(
 
     plot2_path = output_dir / "high_demand_share_by_hour.png"
     fig2.savefig(plot2_path, dpi=150)
-    plt.close(fig2)
 
-    return {
-        "plot1": str(plot1_path),
-        "plot2": str(plot2_path),
+    results = {
+        "plot_paths": {
+            "plot1": str(plot1_path),
+            "plot2": str(plot2_path),
+        },
+        "figs": {
+            "fig1": fig1,
+            "fig2": fig2,
+        },
     }
+
+    if close_figs:
+        plt.close(fig1)
+        plt.close(fig2)
+
+    return results
 
 
 def run_report(cfg, ctx=None) -> dict:
@@ -65,10 +83,11 @@ def run_report(cfg, ctx=None) -> dict:
     hourly_profile_csv = analyze_dir / "hourly_profile.csv"
     high_demand_share_csv = analyze_dir / "high_demand_share_by_hour.csv"
 
-    plots = create_demand_plots(
+    report_out = create_demand_plots(
         hourly_profile_csv=hourly_profile_csv,
         high_demand_share_csv=high_demand_share_csv,
         output_dir=output_dir,
+        close_figs=True,  # Close figures by default for CLI runs
     )
 
-    return {"plots": plots}
+    return {"plots": report_out["plot_paths"]}

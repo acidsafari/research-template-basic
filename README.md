@@ -39,6 +39,11 @@ uv run python scripts/02_analyze.py --config configs/stages/analyze.yaml
 uv run python scripts/03_report.py --config configs/stages/report.yaml
 ```
 
+### 4. Explore in Notebooks
+You can also explore the project interactively. The template is **Colab-Ready** and includes an example notebook demonstrating integration with the package and MLflow tracking:
+
+- **[Basic Template Exploration](./notebooks/basic_template_exploration.ipynb)**: Shows how to import the package, run stages, and use MLflow.
+
 ---
 
 ## 🏗️ Architectural Patterns
@@ -51,6 +56,10 @@ uv run python scripts/03_report.py --config configs/stages/report.yaml
 ### 2. Composed Configuration
 - **Settings (`configs/`)**: Instead of monolithic files, we use small, focused YAML files (`run.yaml`, `paths.yaml`, `stages/*.yaml`).
 - **Composition**: Scripts merge these files at runtime, allowing you to change a dataset path or a model threshold without touching the code.
+
+### 3. Traceability & Experiment Tracking
+- **Run ID**: Every execution generates a unique timestamped `run_id` to prevent overwrites.
+- **MLflow Tracking**: Integrated support for logging parameters, metrics (like MSE), and artifacts. This ensures that every result is tied back to the exact code and configuration that produced it.
 
 ---
 
